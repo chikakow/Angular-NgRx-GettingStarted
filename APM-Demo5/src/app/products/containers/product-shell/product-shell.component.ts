@@ -3,8 +3,11 @@ import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
 import * as fromProduct from './../../state';
+import * as fromRoot from '../../../state/app.state';
+import * as fromUser from '../../../user/state';
 import * as productActions from './../../state/product.actions';
 import { Product } from '../../product';
+import { User } from 'src/app/user/user';
 
 @Component({
   templateUrl: './product-shell.component.html',
@@ -15,8 +18,9 @@ export class ProductShellComponent implements OnInit {
   selectedProduct$: Observable<Product>;
   products$: Observable<Product[]>;
   errorMessage$: Observable<string>;
+  user$: Observable<User>;
 
-  constructor(private store: Store<fromProduct.State>) {}
+  constructor(private store: Store<fromRoot.State>) {}
 
   ngOnInit(): void {
     this.store.dispatch(new productActions.Load());
@@ -24,6 +28,7 @@ export class ProductShellComponent implements OnInit {
     this.errorMessage$ = this.store.pipe(select(fromProduct.getError));
     this.selectedProduct$ = this.store.pipe(select(fromProduct.getCurrentProduct));
     this.displayCode$ = this.store.pipe(select(fromProduct.getShowProductCode));
+    this.user$ = this.store.pipe(select(fromUser.getCurrentUser))
   }
 
   checkChanged(value: boolean): void {

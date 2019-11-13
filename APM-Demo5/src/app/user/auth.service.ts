@@ -1,6 +1,10 @@
 import { Injectable } from '@angular/core';
 
 import { User } from './user';
+import { Store } from '@ngrx/store';
+import * as fromRoot from '../state/app.state';
+import { LoadUser } from './state/user.actions';
+
 
 @Injectable({
   providedIn: 'root',
@@ -9,7 +13,7 @@ export class AuthService {
     currentUser: User | null;
     redirectUrl: string;
 
-    constructor() {  }
+    constructor(private store: Store<fromRoot.State>) {  }
 
     isLoggedIn(): boolean {
         return !!this.currentUser;
@@ -24,6 +28,8 @@ export class AuthService {
             userName,
             isAdmin: false
         };
+
+        this.store.dispatch(new LoadUser(this.currentUser));
     }
 
     logout(): void {
